@@ -15,6 +15,8 @@ public class StandardGooseGame implements GooseGame {
         this.gameConfiguration = gameConfiguration;
         specialPositions.put(0, "Start");
         gameConfiguration.getBridges().keySet().forEach(b -> specialPositions.put(b, "The Bridge"));
+        gameConfiguration.getGooses().forEach(g -> specialPositions.put(g, g + ", The Goose"));
+
     }
 
     @Override
@@ -62,6 +64,11 @@ public class StandardGooseGame implements GooseGame {
         if (gameConfiguration.isBridge(newPosition)) {
             newPosition = gameConfiguration.getBridgePosition(newPosition);
             moves.add(new BridgeResult(name, String.valueOf(newPosition)));
+        }
+
+        if (gameConfiguration.isGoose(newPosition)) {
+            newPosition += dice1 + dice2;
+            moves.add(new GooseResult(name, String.valueOf(newPosition)));
         }
 
         return newPosition;

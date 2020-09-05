@@ -56,12 +56,12 @@ class ApplicationIntegrationTest {
 
     @Test
     void shouldAddPlayerAndMoveIt() {
-        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 1", "exit");
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 3, 1", "exit");
 
         application.startGame();
 
         Mockito.verify(printStream).println("Players: pippo");
-        Mockito.verify(printStream).println("pippo rolls 4, 1. pippo moves from Start to 5");
+        Mockito.verify(printStream).println("pippo rolls 3, 1. pippo moves from Start to 4");
         Mockito.verifyNoMoreInteractions(printStream);
     }
 
@@ -116,13 +116,25 @@ class ApplicationIntegrationTest {
 
     @Test
     void shouldAddPlayerAndPassFromTheBridge() {
-        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 2", "move pippo 3, 3", "exit");
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 2", "move pippo 3, 2", "exit");
 
         application.startGame();
 
         Mockito.verify(printStream).println("Players: pippo");
         Mockito.verify(printStream).println("pippo rolls 4, 2. pippo moves from Start to The Bridge. pippo jumps to 12");
-        Mockito.verify(printStream).println("pippo rolls 3, 3. pippo moves from 12 to 18");
+        Mockito.verify(printStream).println("pippo rolls 3, 2. pippo moves from 12 to 17");
+        Mockito.verifyNoMoreInteractions(printStream);
+    }
+
+    @Test
+    void shouldAddPlayerAndPassFromTheGoose() {
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 1", "move pippo 3, 2", "exit");
+
+        application.startGame();
+
+        Mockito.verify(printStream).println("Players: pippo");
+        Mockito.verify(printStream).println("pippo rolls 4, 1. pippo moves from Start to 5, The Goose. pippo moves again and goes to 10");
+        Mockito.verify(printStream).println("pippo rolls 3, 2. pippo moves from 10 to 15");
         Mockito.verifyNoMoreInteractions(printStream);
     }
 }

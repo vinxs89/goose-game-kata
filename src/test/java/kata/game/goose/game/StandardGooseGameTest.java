@@ -44,7 +44,7 @@ class StandardGooseGameTest {
     @Test
     void shouldMovePlayer() {
         final String player = "pippo";
-        final String dice1 = "4";
+        final String dice1 = "3";
         final String dice2 = "1";
 
         standardGooseGame.players.put(player, 0);
@@ -59,7 +59,7 @@ class StandardGooseGameTest {
         assertEquals(MoveResult.class, results.get(1).getClass());
         assertEquals(player, ((MoveResult) results.get(1)).getName());
         assertEquals("Start", ((MoveResult) results.get(1)).getFrom());
-        assertEquals("5", ((MoveResult) results.get(1)).getTo());
+        assertEquals("4", ((MoveResult) results.get(1)).getTo());
     }
 
     @Test
@@ -149,5 +149,30 @@ class StandardGooseGameTest {
         assertEquals(BridgeResult.class, results.get(2).getClass());
         assertEquals(player, ((BridgeResult) results.get(2)).getName());
         assertEquals("12", ((BridgeResult) results.get(2)).getTo());
+    }
+
+    @Test
+    void shouldMovePlayerFromTheGoose() {
+        final String player = "pippo";
+        final String dice1 = "4";
+        final String dice2 = "1";
+
+        standardGooseGame.players.put(player, 0);
+        final List<Result> results = standardGooseGame.movePlayer(player, dice1, dice2);
+
+        assertEquals(3, results.size());
+        assertEquals(RollsResult.class, results.get(0).getClass());
+        assertEquals(player, ((RollsResult) results.get(0)).getName());
+        assertEquals(dice1, ((RollsResult) results.get(0)).getDice1());
+        assertEquals(dice2, ((RollsResult) results.get(0)).getDice2());
+
+        assertEquals(MoveResult.class, results.get(1).getClass());
+        assertEquals(player, ((MoveResult) results.get(1)).getName());
+        assertEquals("Start", ((MoveResult) results.get(1)).getFrom());
+        assertEquals("5, The Goose", ((MoveResult) results.get(1)).getTo());
+
+        assertEquals(GooseResult.class, results.get(2).getClass());
+        assertEquals(player, ((GooseResult) results.get(2)).getName());
+        assertEquals("10", ((GooseResult) results.get(2)).getTo());
     }
 }
