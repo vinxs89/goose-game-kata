@@ -198,7 +198,7 @@ class StandardGooseGameTest {
 
         assertEquals(GooseResult.class, results.get(2).getClass());
         assertEquals(player, ((GooseResult) results.get(2)).getName());
-        assertEquals("18", ((GooseResult) results.get(2)).getTo());
+        assertEquals("18, The Goose", ((GooseResult) results.get(2)).getTo());
 
         assertEquals(GooseResult.class, results.get(3).getClass());
         assertEquals(player, ((GooseResult) results.get(3)).getName());

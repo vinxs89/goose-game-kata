@@ -7,7 +7,7 @@ public class CommandFactory {
 
     private static final Pattern EXIT = Pattern.compile("exit");
     private static final Pattern ADD_PLAYER = Pattern.compile("add player (?<name>[0-z]+)");
-    private static final Pattern MOVE_PLAYER = Pattern.compile("move (?<name>[0-z]+) (?<dice1>[0-6]+), (?<dice2>[0-6]+)");
+    private static final Pattern MOVE_PLAYER = Pattern.compile("move (?<name>[0-z]+) (?<dice1>[1-6]+), (?<dice2>[1-6]+)");
     private static final Pattern AUTO_MOVE_PLAYER = Pattern.compile("move (?<name>[0-z]+)");
 
     public Command createCommand(String input) {

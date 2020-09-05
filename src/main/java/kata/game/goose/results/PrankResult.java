@@ -14,7 +14,7 @@ public class PrankResult implements Result {
 
     @Override
     public String print() {
-        return String.format("On %s there is %s, who returns to %s", name, newPosition, oldPosition);
+        return String.format("On %s there is %s, who returns to %s", newPosition, name, oldPosition);
     }
 
 

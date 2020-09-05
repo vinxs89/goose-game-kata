@@ -5,7 +5,6 @@ import java.util.Random;
 public class RandomUtil {
 
     private static final RandomUtil INSTANCE = new RandomUtil();
-    private Random random = new Random();
 
     private RandomUtil() {
     }
@@ -15,6 +14,6 @@ public class RandomUtil {
     }
 
     public String randomDice() {
-        return String.valueOf(random.nextInt(6) + 1);
+        return String.valueOf(new Random().nextInt(6) + 1);
     }
 }

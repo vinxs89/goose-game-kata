@@ -116,20 +116,13 @@ class ApplicationIntegrationTest {
 
     @Test
     void shouldAddPlayerAndPassFromTheBridge() {
-        Mockito.when(scanner.nextLine()).thenReturn("add player pippo")
-                .thenReturn("add player pluto")
-                .thenReturn("move pippo 4, 3")
-                .thenReturn("move pluto 3, 4")
-                .thenReturn("move pippo 1, 1")
-                .thenReturn("exit");
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 2", "move pippo 3, 2", "exit");
 
         application.startGame();
 
         Mockito.verify(printStream).println("Players: pippo");
-        Mockito.verify(printStream).println("Players: pippo, pluto");
-        Mockito.verify(printStream).println("pippo rolls 4, 3. pippo moves from Start to 7");
-        Mockito.verify(printStream).println("pluto rolls 3, 4. pluto moves from Start to 7. On 7 there is pippo, who returns to Start");
-        Mockito.verify(printStream).println("pippo rolls 1, 1. pippo moves from Start to 2");
+        Mockito.verify(printStream).println("pippo rolls 4, 2. pippo moves from Start to The Bridge. pippo jumps to 12");
+        Mockito.verify(printStream).println("pippo rolls 3, 2. pippo moves from 12 to 17");
         Mockito.verifyNoMoreInteractions(printStream);
     }
 
@@ -147,13 +140,20 @@ class ApplicationIntegrationTest {
 
     @Test
     void shouldAddTwoPlayersAndDoPrank() {
-        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 1", "move pippo 3, 2", "exit");
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo")
+                .thenReturn("add player pluto")
+                .thenReturn("move pippo 4, 3")
+                .thenReturn("move pluto 3, 4")
+                .thenReturn("move pippo 1, 1")
+                .thenReturn("exit");
 
         application.startGame();
 
         Mockito.verify(printStream).println("Players: pippo");
-        Mockito.verify(printStream).println("pippo rolls 4, 1. pippo moves from Start to 5, The Goose. pippo moves again and goes to 10");
-        Mockito.verify(printStream).println("pippo rolls 3, 2. pippo moves from 10 to 15");
+        Mockito.verify(printStream).println("Players: pippo, pluto");
+        Mockito.verify(printStream).println("pippo rolls 4, 3. pippo moves from Start to 7");
+        Mockito.verify(printStream).println("pluto rolls 3, 4. pluto moves from Start to 7. On 7 there is pippo, who returns to Start");
+        Mockito.verify(printStream).println("pippo rolls 1, 1. pippo moves from Start to 2");
         Mockito.verifyNoMoreInteractions(printStream);
     }
 }

@@ -9,6 +9,7 @@ import kata.game.goose.game.StandardGooseGame;
 import kata.game.goose.io.ConsoleInputOutputHandler;
 import kata.game.goose.io.InputOutputHandler;
 import kata.game.goose.results.Result;
+import kata.game.goose.results.WinResult;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -40,6 +41,10 @@ public class Application {
             command = inputOutputHandler.receiveInput();
             List<Result> results = command.execute(gooseGame);
             inputOutputHandler.handleOutput(results);
+
+            if (results.stream().anyMatch(r -> r instanceof WinResult)) {
+                break;
+            }
         } while (!(command instanceof ExitCommand));
     }
 }
