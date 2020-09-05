@@ -204,4 +204,33 @@ class StandardGooseGameTest {
         assertEquals(player, ((GooseResult) results.get(3)).getName());
         assertEquals("22", ((GooseResult) results.get(3)).getTo());
     }
+
+    @Test
+    void shouldMovePlayerAndDoPrank() {
+        final String player1 = "pippo";
+        final String player2 = "pluto";
+        final String dice1 = "1";
+        final String dice2 = "1";
+
+        standardGooseGame.players.put(player1, 15);
+        standardGooseGame.players.put(player2, 17);
+
+        final List<Result> results = standardGooseGame.movePlayer(player1, dice1, dice2);
+
+        assertEquals(3, results.size());
+        assertEquals(RollsResult.class, results.get(0).getClass());
+        assertEquals(player1, ((RollsResult) results.get(0)).getName());
+        assertEquals(dice1, ((RollsResult) results.get(0)).getDice1());
+        assertEquals(dice2, ((RollsResult) results.get(0)).getDice2());
+
+        assertEquals(MoveResult.class, results.get(1).getClass());
+        assertEquals(player1, ((MoveResult) results.get(1)).getName());
+        assertEquals("15", ((MoveResult) results.get(1)).getFrom());
+        assertEquals("17", ((MoveResult) results.get(1)).getTo());
+
+        assertEquals(PrankResult.class, results.get(2).getClass());
+        assertEquals(player2, ((PrankResult) results.get(2)).getName());
+        assertEquals("17", ((PrankResult) results.get(2)).getNewPosition());
+        assertEquals("15", ((PrankResult) results.get(2)).getOldPosition());
+    }
 }

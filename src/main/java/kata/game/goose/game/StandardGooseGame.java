@@ -16,7 +16,6 @@ public class StandardGooseGame implements GooseGame {
         specialPositions.put(0, "Start");
         gameConfiguration.getBridges().keySet().forEach(b -> specialPositions.put(b, "The Bridge"));
         gameConfiguration.getGooses().forEach(g -> specialPositions.put(g, g + ", The Goose"));
-
     }
 
     @Override
@@ -49,29 +48,49 @@ public class StandardGooseGame implements GooseGame {
 
     private int calculateNewPosition(List<Result> moves, String name, int currentPosition, int dice1, int dice2) {
         int newPosition = currentPosition + dice1 + dice2;
-        if (newPosition < gameConfiguration.getLength()) {
+
+        if (newPosition <= gameConfiguration.getLength()) {
             moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
-        } else if (newPosition == gameConfiguration.getLength()) {
-            moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
-            moves.add(new WinResult(name));
-            return newPosition;
         } else {
             moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(gameConfiguration.getLength())));
             newPosition = gameConfiguration.getLength() - (newPosition - gameConfiguration.getLength());
             moves.add(new BounceResult(name, newPosition));
         }
 
-        if (gameConfiguration.isBridge(newPosition)) {
-            newPosition = gameConfiguration.getBridgePosition(newPosition);
-            moves.add(new BridgeResult(name, String.valueOf(newPosition)));
-        }
-
-        while(gameConfiguration.isGoose(newPosition)) {
-            newPosition += dice1 + dice2;
-            moves.add(new GooseResult(name, String.valueOf(newPosition)));
+        if (newPosition == gameConfiguration.getLength()) {
+            moves.add(new WinResult(name));
+        } else {
+            newPosition = checkForBridge(newPosition, name, moves);
+            newPosition = checkForGoose(newPosition, name, dice1, dice2, moves);
+            doPrankIfPossible(name, newPosition, currentPosition, moves);
         }
 
         return newPosition;
+    }
+
+    private int checkForBridge(int newPosition, String name, List<Result> moves) {
+        if (gameConfiguration.isBridge(newPosition)) {
+            newPosition = gameConfiguration.getBridgePosition(newPosition);
+            moves.add(new BridgeResult(name, getSpecialName(newPosition)));
+        }
+        return newPosition;
+    }
+
+    private int checkForGoose(int newPosition, String name, int dice1, int dice2, List<Result> moves) {
+        while (gameConfiguration.isGoose(newPosition)) {
+            newPosition += dice1 + dice2;
+            moves.add(new GooseResult(name, getSpecialName(newPosition)));
+        }
+        return newPosition;
+    }
+
+    private void doPrankIfPossible(String name, int newPosition, int oldPosition, List<Result> moves) {
+        players.forEach((key, value) -> {
+            if (newPosition == value && !(name.equals(key))) {
+                players.put(key, oldPosition);
+                moves.add(new PrankResult(key, getSpecialName(newPosition), getSpecialName(oldPosition)));
+            }
+        });
     }
 
     private String getSpecialName(int position) {
