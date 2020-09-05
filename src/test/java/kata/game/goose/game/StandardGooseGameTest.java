@@ -55,7 +55,7 @@ class StandardGooseGameTest {
 
         assertEquals(MoveResult.class, results.get(1).getClass());
         assertEquals(player, ((MoveResult) results.get(1)).getName());
-        assertEquals("START", ((MoveResult) results.get(1)).getFrom());
+        assertEquals("Start", ((MoveResult) results.get(1)).getFrom());
         assertEquals("6", ((MoveResult) results.get(1)).getTo());
     }
 

@@ -50,4 +50,15 @@ class ApplicationIntegrationTest {
         Mockito.verify(printStream).println("pippo: already existing player");
         Mockito.verifyNoMoreInteractions(printStream);
     }
+
+    @Test
+    void shouldAddPlayerAndMoveIt() {
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 2", "exit");
+
+        application.startGame();
+
+        Mockito.verify(printStream).println("Players: pippo");
+        Mockito.verify(printStream).println("pippo rolls 4, 2. pippo moves from Start to 6");
+        Mockito.verifyNoMoreInteractions(printStream);
+    }
 }

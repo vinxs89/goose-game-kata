@@ -7,6 +7,11 @@ import java.util.*;
 public class StandardGooseGame implements GooseGame {
 
     Map<String, Integer> players = new LinkedHashMap<>();
+    Map<Integer, String> specialPositions = new LinkedHashMap<>();
+
+    public StandardGooseGame() {
+        specialPositions.put(0, "Start");
+    }
 
     @Override
     public List<Result> addPlayer(String name) {
@@ -31,9 +36,17 @@ public class StandardGooseGame implements GooseGame {
         int dice1 = Integer.parseInt(dice1String);
         int dice2 = Integer.parseInt(dice2String);
         int newPosition = currentPosition + dice1 + dice2;
-        moves.add(new MoveResult(name, currentPosition == 0 ? "START" : String.valueOf(currentPosition), String.valueOf(newPosition)));
+        moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
 
         players.put(name, newPosition);
         return moves;
+    }
+
+    private String getSpecialName(int position) {
+        if (specialPositions.containsKey(position)) {
+            return specialPositions.get(position);
+        } else {
+            return String.valueOf(position);
+        }
     }
 }
