@@ -1,6 +1,5 @@
 package kata.game.goose;
 
-import kata.game.goose.results.Result;
 import kata.game.goose.commands.Command;
 import kata.game.goose.commands.CommandFactory;
 import kata.game.goose.commands.ExitCommand;
@@ -8,6 +7,7 @@ import kata.game.goose.game.GooseGame;
 import kata.game.goose.game.StandardGooseGame;
 import kata.game.goose.io.ConsoleInputOutputHandler;
 import kata.game.goose.io.InputOutputHandler;
+import kata.game.goose.results.Result;
 
 import java.io.PrintStream;
 import java.util.List;

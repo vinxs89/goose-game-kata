@@ -4,8 +4,10 @@ import kata.game.goose.commands.CommandFactory;
 import kata.game.goose.game.GooseGame;
 import kata.game.goose.game.StandardGooseGame;
 import kata.game.goose.io.ConsoleInputOutputHandler;
+import kata.game.goose.utils.RandomUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.io.PrintStream;
@@ -89,4 +91,25 @@ class ApplicationIntegrationTest {
         Mockito.verifyNoMoreInteractions(printStream);
     }
 
+    @Test
+    void shouldAddPlayerAndDoSomeFakeRandomMoves() {
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo")
+                .thenReturn("move pippo")
+                .thenReturn("move pippo")
+                .thenReturn("move pippo")
+                .thenReturn("exit");
+
+        RandomUtil randomUtil = Mockito.mock(RandomUtil.class);
+        Mockito.when(randomUtil.randomDice()).thenReturn("1", "2", "3", "4", "5", "6");
+        try (final MockedStatic<RandomUtil> randomUtilMockedStatic = Mockito.mockStatic(RandomUtil.class)) {
+            randomUtilMockedStatic.when(RandomUtil::getInstance).thenReturn(randomUtil);
+            application.startGame();
+        }
+
+        Mockito.verify(printStream).println("Players: pippo");
+        Mockito.verify(printStream).println("pippo rolls 1, 2. pippo moves from Start to 3");
+        Mockito.verify(printStream).println("pippo rolls 3, 4. pippo moves from 3 to 10");
+        Mockito.verify(printStream).println("pippo rolls 5, 6. pippo moves from 10 to 21");
+        Mockito.verifyNoMoreInteractions(printStream);
+    }
 }

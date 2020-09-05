@@ -2,8 +2,7 @@ package kata.game.goose.commands;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CommandFactoryTest {
 
@@ -31,6 +30,17 @@ class CommandFactoryTest {
         assertEquals("pluto", movePlayerCommand.getName());
         assertEquals("4", movePlayerCommand.getDice1());
         assertEquals("2", movePlayerCommand.getDice2());
+    }
+
+    @Test
+    void shouldCreateAutoMovePlayerCommand() {
+        final Command command = commandFactory.createCommand("move pluto");
+        assertEquals(MovePlayerCommand.class, command.getClass());
+        MovePlayerCommand movePlayerCommand = (MovePlayerCommand) command;
+
+        assertEquals("pluto", movePlayerCommand.getName());
+        assertNotNull(movePlayerCommand.getDice1());
+        assertNotNull(movePlayerCommand.getDice2());
     }
 
     @Test

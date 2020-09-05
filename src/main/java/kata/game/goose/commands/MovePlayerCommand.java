@@ -2,6 +2,7 @@ package kata.game.goose.commands;
 
 import kata.game.goose.game.GooseGame;
 import kata.game.goose.results.Result;
+import kata.game.goose.utils.RandomUtil;
 
 import java.util.List;
 
@@ -10,6 +11,12 @@ public class MovePlayerCommand implements Command {
     private String name;
     private String dice1;
     private String dice2;
+
+    MovePlayerCommand(String name) {
+        this.name = name;
+        this.dice1 = RandomUtil.getInstance().randomDice();
+        this.dice2 = RandomUtil.getInstance().randomDice();
+    }
 
     MovePlayerCommand(String name, String dice1, String dice2) {
         this.name = name;
