@@ -23,6 +23,17 @@ class CommandFactoryTest {
     }
 
     @Test
+    void shouldCreateMovePlayerCommand() {
+        final Command command = commandFactory.createCommand("move pluto 4, 2");
+        assertEquals(MovePlayerCommand.class, command.getClass());
+        MovePlayerCommand movePlayerCommand = (MovePlayerCommand) command;
+
+        assertEquals("pluto", movePlayerCommand.getName());
+        assertEquals("4", movePlayerCommand.getDice1());
+        assertEquals("2", movePlayerCommand.getDice2());
+    }
+
+    @Test
     void shouldThrowIllegalArgumentException() {
         try {
             final Command command = commandFactory.createCommand("unrecognized");

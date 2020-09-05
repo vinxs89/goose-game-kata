@@ -1,11 +1,13 @@
 package kata.game.goose.game;
 
-import kata.game.goose.exceptions.AlreadyExistingPlayerException;
+import kata.game.goose.results.Result;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface GooseGame {
 
-    Collection<String> addPlayer(String name) throws AlreadyExistingPlayerException;
+    List<Result> addPlayer(String name);
+
+    List<Result> movePlayer(String name, String dice1, String dice2);
 
 }
