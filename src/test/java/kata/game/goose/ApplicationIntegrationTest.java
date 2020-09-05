@@ -61,4 +61,32 @@ class ApplicationIntegrationTest {
         Mockito.verify(printStream).println("pippo rolls 4, 2. pippo moves from Start to 6");
         Mockito.verifyNoMoreInteractions(printStream);
     }
+
+
+    @Test
+    void shouldAddPlayerBounceAndWin() {
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo")
+                .thenReturn("move pippo 6, 6")
+                .thenReturn("move pippo 6, 6")
+                .thenReturn("move pippo 6, 6")
+                .thenReturn("move pippo 6, 6")
+                .thenReturn("move pippo 6, 6")
+                .thenReturn("move pippo 2, 4")
+                .thenReturn("move pippo 1, 2")
+                .thenReturn("exit");
+
+        application.startGame();
+
+        Mockito.verify(printStream).println("Players: pippo");
+        Mockito.verify(printStream).println("pippo rolls 6, 6. pippo moves from Start to 12");
+        Mockito.verify(printStream).println("pippo rolls 6, 6. pippo moves from 12 to 24");
+        Mockito.verify(printStream).println("pippo rolls 6, 6. pippo moves from 24 to 36");
+        Mockito.verify(printStream).println("pippo rolls 6, 6. pippo moves from 36 to 48");
+        Mockito.verify(printStream).println("pippo rolls 6, 6. pippo moves from 48 to 60");
+        Mockito.verify(printStream).println("pippo rolls 2, 4. pippo moves from 60 to 63. pippo bounces! pippo returns to 60");
+        Mockito.verify(printStream).println("pippo rolls 1, 2. pippo moves from 60 to 63. pippo Wins!!");
+
+        Mockito.verifyNoMoreInteractions(printStream);
+    }
+
 }

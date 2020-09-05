@@ -7,7 +7,9 @@ import java.util.*;
 public class StandardGooseGame implements GooseGame {
 
     Map<String, Integer> players = new LinkedHashMap<>();
-    Map<Integer, String> specialPositions = new LinkedHashMap<>();
+
+    private Map<Integer, String> specialPositions = new LinkedHashMap<>();
+    private int gameLength = 63;
 
     public StandardGooseGame() {
         specialPositions.put(0, "Start");
@@ -35,11 +37,25 @@ public class StandardGooseGame implements GooseGame {
 
         int dice1 = Integer.parseInt(dice1String);
         int dice2 = Integer.parseInt(dice2String);
-        int newPosition = currentPosition + dice1 + dice2;
-        moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
-
+        int newPosition = calculateNewPosition(moves, name, currentPosition, dice1, dice2);
         players.put(name, newPosition);
+
         return moves;
+    }
+
+    private int calculateNewPosition(List<Result> moves, String name, int currentPosition, int dice1, int dice2) {
+        int newPosition = currentPosition + dice1 + dice2;
+        if (newPosition < gameLength) {
+            moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
+        } else if (newPosition == gameLength) {
+            moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
+            moves.add(new WinResult(name));
+        } else {
+            moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(gameLength)));
+            newPosition = gameLength - (newPosition - gameLength);
+            moves.add(new BounceResult(name, newPosition));
+        }
+        return newPosition;
     }
 
     private String getSpecialName(int position) {

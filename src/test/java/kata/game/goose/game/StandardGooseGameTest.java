@@ -73,4 +73,59 @@ class StandardGooseGameTest {
         } catch (IllegalArgumentException ignored) {
         }
     }
+
+
+    @Test
+    void shouldWinPlayer() {
+        final String player = "pippo";
+        final String dice1 = "1";
+        final String dice2 = "2";
+
+        StandardGooseGame game = new StandardGooseGame();
+        game.players.put(player, 60);
+
+        final List<Result> results = game.movePlayer(player, dice1, dice2);
+
+        assertEquals(3, results.size());
+        assertEquals(RollsResult.class, results.get(0).getClass());
+        assertEquals(player, ((RollsResult) results.get(0)).getName());
+        assertEquals(dice1, ((RollsResult) results.get(0)).getDice1());
+        assertEquals(dice2, ((RollsResult) results.get(0)).getDice2());
+
+        assertEquals(MoveResult.class, results.get(1).getClass());
+        assertEquals(player, ((MoveResult) results.get(1)).getName());
+        assertEquals("60", ((MoveResult) results.get(1)).getFrom());
+        assertEquals("63", ((MoveResult) results.get(1)).getTo());
+
+        assertEquals(WinResult.class, results.get(2).getClass());
+        assertEquals(player, ((WinResult) results.get(2)).getName());
+    }
+
+
+    @Test
+    void shouldBouncePlayer() {
+        final String player = "pippo";
+        final String dice1 = "4";
+        final String dice2 = "2";
+
+        StandardGooseGame game = new StandardGooseGame();
+        game.players.put(player, 60);
+
+        final List<Result> results = game.movePlayer(player, dice1, dice2);
+
+        assertEquals(3, results.size());
+        assertEquals(RollsResult.class, results.get(0).getClass());
+        assertEquals(player, ((RollsResult) results.get(0)).getName());
+        assertEquals(dice1, ((RollsResult) results.get(0)).getDice1());
+        assertEquals(dice2, ((RollsResult) results.get(0)).getDice2());
+
+        assertEquals(MoveResult.class, results.get(1).getClass());
+        assertEquals(player, ((MoveResult) results.get(1)).getName());
+        assertEquals("60", ((MoveResult) results.get(1)).getFrom());
+        assertEquals("63", ((MoveResult) results.get(1)).getTo());
+
+        assertEquals(BounceResult.class, results.get(2).getClass());
+        assertEquals(player, ((BounceResult) results.get(2)).getName());
+        assertEquals(60, ((BounceResult) results.get(2)).getBouncePosition());
+    }
 }
