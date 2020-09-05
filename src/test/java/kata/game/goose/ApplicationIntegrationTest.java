@@ -1,6 +1,7 @@
 package kata.game.goose;
 
 import kata.game.goose.commands.CommandFactory;
+import kata.game.goose.game.GameConfiguration;
 import kata.game.goose.game.GooseGame;
 import kata.game.goose.game.StandardGooseGame;
 import kata.game.goose.io.ConsoleInputOutputHandler;
@@ -26,7 +27,7 @@ class ApplicationIntegrationTest {
 
         final CommandFactory commandFactory = new CommandFactory();
         final ConsoleInputOutputHandler inputOutputHandler = new ConsoleInputOutputHandler(scanner, printStream, commandFactory);
-        final GooseGame gooseGame = new StandardGooseGame();
+        final GooseGame gooseGame = new StandardGooseGame(new GameConfiguration());
 
         application = new Application(inputOutputHandler, gooseGame);
     }
@@ -55,12 +56,12 @@ class ApplicationIntegrationTest {
 
     @Test
     void shouldAddPlayerAndMoveIt() {
-        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 2", "exit");
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 1", "exit");
 
         application.startGame();
 
         Mockito.verify(printStream).println("Players: pippo");
-        Mockito.verify(printStream).println("pippo rolls 4, 2. pippo moves from Start to 6");
+        Mockito.verify(printStream).println("pippo rolls 4, 1. pippo moves from Start to 5");
         Mockito.verifyNoMoreInteractions(printStream);
     }
 
@@ -110,6 +111,18 @@ class ApplicationIntegrationTest {
         Mockito.verify(printStream).println("pippo rolls 1, 2. pippo moves from Start to 3");
         Mockito.verify(printStream).println("pippo rolls 3, 4. pippo moves from 3 to 10");
         Mockito.verify(printStream).println("pippo rolls 5, 6. pippo moves from 10 to 21");
+        Mockito.verifyNoMoreInteractions(printStream);
+    }
+
+    @Test
+    void shouldAddPlayerAndPassFromTheBridge() {
+        Mockito.when(scanner.nextLine()).thenReturn("add player pippo", "move pippo 4, 2", "move pippo 3, 3", "exit");
+
+        application.startGame();
+
+        Mockito.verify(printStream).println("Players: pippo");
+        Mockito.verify(printStream).println("pippo rolls 4, 2. pippo moves from Start to The Bridge. pippo jumps to 12");
+        Mockito.verify(printStream).println("pippo rolls 3, 3. pippo moves from 12 to 18");
         Mockito.verifyNoMoreInteractions(printStream);
     }
 }

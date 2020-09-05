@@ -8,11 +8,13 @@ public class StandardGooseGame implements GooseGame {
 
     Map<String, Integer> players = new LinkedHashMap<>();
 
+    private GameConfiguration gameConfiguration;
     private Map<Integer, String> specialPositions = new LinkedHashMap<>();
-    private int gameLength = 63;
 
-    public StandardGooseGame() {
+    public StandardGooseGame(GameConfiguration gameConfiguration) {
+        this.gameConfiguration = gameConfiguration;
         specialPositions.put(0, "Start");
+        gameConfiguration.getBridges().keySet().forEach(b -> specialPositions.put(b, "The Bridge"));
     }
 
     @Override
@@ -45,16 +47,23 @@ public class StandardGooseGame implements GooseGame {
 
     private int calculateNewPosition(List<Result> moves, String name, int currentPosition, int dice1, int dice2) {
         int newPosition = currentPosition + dice1 + dice2;
-        if (newPosition < gameLength) {
+        if (newPosition < gameConfiguration.getLength()) {
             moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
-        } else if (newPosition == gameLength) {
+        } else if (newPosition == gameConfiguration.getLength()) {
             moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(newPosition)));
             moves.add(new WinResult(name));
+            return newPosition;
         } else {
-            moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(gameLength)));
-            newPosition = gameLength - (newPosition - gameLength);
+            moves.add(new MoveResult(name, getSpecialName(currentPosition), getSpecialName(gameConfiguration.getLength())));
+            newPosition = gameConfiguration.getLength() - (newPosition - gameConfiguration.getLength());
             moves.add(new BounceResult(name, newPosition));
         }
+
+        if (gameConfiguration.isBridge(newPosition)) {
+            newPosition = gameConfiguration.getBridgePosition(newPosition);
+            moves.add(new BridgeResult(name, String.valueOf(newPosition)));
+        }
+
         return newPosition;
     }
 

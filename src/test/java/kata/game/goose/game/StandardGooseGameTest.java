@@ -1,6 +1,7 @@
 package kata.game.goose.game;
 
 import kata.game.goose.results.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -11,11 +12,17 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class StandardGooseGameTest {
 
+    private StandardGooseGame standardGooseGame;
+
+    @BeforeEach
+    void setUp() {
+        standardGooseGame = new StandardGooseGame(new GameConfiguration());
+    }
+
     @Test
     void shouldAddNewPlayer() {
         final String player = "pluto";
 
-        StandardGooseGame standardGooseGame = new StandardGooseGame();
         final Collection<Result> results = standardGooseGame.addPlayer(player);
         assertEquals(1, results.size());
         assertEquals(PlayersResult.class, results.iterator().next().getClass());
@@ -24,8 +31,6 @@ class StandardGooseGameTest {
     @Test
     void shouldReturnDuplicatePlayerResult() {
         final String player = "pluto";
-
-        StandardGooseGame standardGooseGame = new StandardGooseGame();
 
         final List<Result> results1 = standardGooseGame.addPlayer(player);
         assertEquals(1, results1.size());
@@ -40,12 +45,10 @@ class StandardGooseGameTest {
     void shouldMovePlayer() {
         final String player = "pippo";
         final String dice1 = "4";
-        final String dice2 = "2";
+        final String dice2 = "1";
 
-        StandardGooseGame game = new StandardGooseGame();
-        game.players.put(player, 0);
-
-        final List<Result> results = game.movePlayer(player, dice1, dice2);
+        standardGooseGame.players.put(player, 0);
+        final List<Result> results = standardGooseGame.movePlayer(player, dice1, dice2);
 
         assertEquals(2, results.size());
         assertEquals(RollsResult.class, results.get(0).getClass());
@@ -56,7 +59,7 @@ class StandardGooseGameTest {
         assertEquals(MoveResult.class, results.get(1).getClass());
         assertEquals(player, ((MoveResult) results.get(1)).getName());
         assertEquals("Start", ((MoveResult) results.get(1)).getFrom());
-        assertEquals("6", ((MoveResult) results.get(1)).getTo());
+        assertEquals("5", ((MoveResult) results.get(1)).getTo());
     }
 
     @Test
@@ -65,10 +68,8 @@ class StandardGooseGameTest {
         final String dice1 = "4";
         final String dice2 = "2";
 
-        StandardGooseGame game = new StandardGooseGame();
-
         try {
-            game.movePlayer(player, dice1, dice2);
+            standardGooseGame.movePlayer(player, dice1, dice2);
             fail("Exception expected");
         } catch (IllegalArgumentException ignored) {
         }
@@ -81,10 +82,8 @@ class StandardGooseGameTest {
         final String dice1 = "1";
         final String dice2 = "2";
 
-        StandardGooseGame game = new StandardGooseGame();
-        game.players.put(player, 60);
-
-        final List<Result> results = game.movePlayer(player, dice1, dice2);
+        standardGooseGame.players.put(player, 60);
+        final List<Result> results = standardGooseGame.movePlayer(player, dice1, dice2);
 
         assertEquals(3, results.size());
         assertEquals(RollsResult.class, results.get(0).getClass());
@@ -108,10 +107,8 @@ class StandardGooseGameTest {
         final String dice1 = "4";
         final String dice2 = "2";
 
-        StandardGooseGame game = new StandardGooseGame();
-        game.players.put(player, 60);
-
-        final List<Result> results = game.movePlayer(player, dice1, dice2);
+        standardGooseGame.players.put(player, 60);
+        final List<Result> results = standardGooseGame.movePlayer(player, dice1, dice2);
 
         assertEquals(3, results.size());
         assertEquals(RollsResult.class, results.get(0).getClass());
@@ -127,5 +124,30 @@ class StandardGooseGameTest {
         assertEquals(BounceResult.class, results.get(2).getClass());
         assertEquals(player, ((BounceResult) results.get(2)).getName());
         assertEquals(60, ((BounceResult) results.get(2)).getBouncePosition());
+    }
+
+    @Test
+    void shouldMovePlayerFromTheBridge() {
+        final String player = "pippo";
+        final String dice1 = "4";
+        final String dice2 = "2";
+
+        standardGooseGame.players.put(player, 0);
+        final List<Result> results = standardGooseGame.movePlayer(player, dice1, dice2);
+
+        assertEquals(3, results.size());
+        assertEquals(RollsResult.class, results.get(0).getClass());
+        assertEquals(player, ((RollsResult) results.get(0)).getName());
+        assertEquals(dice1, ((RollsResult) results.get(0)).getDice1());
+        assertEquals(dice2, ((RollsResult) results.get(0)).getDice2());
+
+        assertEquals(MoveResult.class, results.get(1).getClass());
+        assertEquals(player, ((MoveResult) results.get(1)).getName());
+        assertEquals("Start", ((MoveResult) results.get(1)).getFrom());
+        assertEquals("The Bridge", ((MoveResult) results.get(1)).getTo());
+
+        assertEquals(BridgeResult.class, results.get(2).getClass());
+        assertEquals(player, ((BridgeResult) results.get(2)).getName());
+        assertEquals("12", ((BridgeResult) results.get(2)).getTo());
     }
 }
