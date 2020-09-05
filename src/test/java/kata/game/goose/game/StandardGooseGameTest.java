@@ -175,4 +175,33 @@ class StandardGooseGameTest {
         assertEquals(player, ((GooseResult) results.get(2)).getName());
         assertEquals("10", ((GooseResult) results.get(2)).getTo());
     }
+
+    @Test
+    void shouldMovePlayerFromTheGooseMultipleTimes() {
+        final String player = "pippo";
+        final String dice1 = "2";
+        final String dice2 = "2";
+
+        standardGooseGame.players.put(player, 10);
+        final List<Result> results = standardGooseGame.movePlayer(player, dice1, dice2);
+
+        assertEquals(4, results.size());
+        assertEquals(RollsResult.class, results.get(0).getClass());
+        assertEquals(player, ((RollsResult) results.get(0)).getName());
+        assertEquals(dice1, ((RollsResult) results.get(0)).getDice1());
+        assertEquals(dice2, ((RollsResult) results.get(0)).getDice2());
+
+        assertEquals(MoveResult.class, results.get(1).getClass());
+        assertEquals(player, ((MoveResult) results.get(1)).getName());
+        assertEquals("10", ((MoveResult) results.get(1)).getFrom());
+        assertEquals("14, The Goose", ((MoveResult) results.get(1)).getTo());
+
+        assertEquals(GooseResult.class, results.get(2).getClass());
+        assertEquals(player, ((GooseResult) results.get(2)).getName());
+        assertEquals("18", ((GooseResult) results.get(2)).getTo());
+
+        assertEquals(GooseResult.class, results.get(3).getClass());
+        assertEquals(player, ((GooseResult) results.get(3)).getName());
+        assertEquals("22", ((GooseResult) results.get(3)).getTo());
+    }
 }

@@ -66,7 +66,7 @@ public class StandardGooseGame implements GooseGame {
             moves.add(new BridgeResult(name, String.valueOf(newPosition)));
         }
 
-        if (gameConfiguration.isGoose(newPosition)) {
+        while(gameConfiguration.isGoose(newPosition)) {
             newPosition += dice1 + dice2;
             moves.add(new GooseResult(name, String.valueOf(newPosition)));
         }
