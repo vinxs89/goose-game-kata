@@ -11,6 +11,7 @@ public class StandardGooseGame implements GooseGame {
     private GameConfiguration gameConfiguration;
     private Map<Integer, String> specialPositions = new LinkedHashMap<>();
 
+    // TODO Move translations to specific classs
     public StandardGooseGame(GameConfiguration gameConfiguration) {
         this.gameConfiguration = gameConfiguration;
         specialPositions.put(0, "Start");

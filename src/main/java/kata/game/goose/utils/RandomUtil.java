@@ -13,6 +13,7 @@ public class RandomUtil {
         return INSTANCE;
     }
 
+    // TODO check why random instance is not working
     public String randomDice() {
         return String.valueOf(new Random().nextInt(6) + 1);
     }

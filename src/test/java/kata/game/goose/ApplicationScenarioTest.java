@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
+// This is not a real test but it's nice to see how it runs
 class ApplicationScenarioTest {
 
     private Scanner scanner;
